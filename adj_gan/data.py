@@ -52,7 +52,7 @@ class MyMolDataset(Dataset, ABC):
 
 if __name__ == '__main__':
 
-    dataset = MyMolDataset(data_file_path=os.path.join('dataset', 'gdb13_g.csv'),
+    dataset = MyMolDataset(data_file_path=os.path.join('data', 'remove_bad_group_and_bad_tm.csv'),
                            transform=CH_smiles_to_adj, target=['density/(g/cm3)', 'Tm/K', 'mass_calorific_value_h/(MJ/kg)', 'ISP'],
                            target_transform='01gaussian',
                            device='cpu')
