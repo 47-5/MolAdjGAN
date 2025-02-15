@@ -1,0 +1,32 @@
+CC1CC23CCC24C1C34C
+CCC1C23CC4C56C(C(C)C52)C6C413
+CC1CCC2(C)CCCCC1C2
+CCC1CCCC23CC2CC13
+CC12CC1CCCC13CCC1C23
+CC1C2CC(C3CC13)C1(CC1)C2
+CC1C2CC3CCC4(C2)CC3C14
+error smiles
+CCCCCCC(C)C1CC1C
+error smiles
+CC1C(C)C2(C3CC3)CC12
+C1C2CC34CC3C2CC2CC1C24
+error smiles
+CC(C)CCCC1CC(C)C1C
+error smiles
+error smiles
+CC1CC23CC4CC2CC3C14C
+error smiles
+CCCCC1CCC(C)C(C)C1
+error smiles
+error smiles
+error smiles
+error smiles
+CC1C2(C)CC13CC1CCC123
+error smiles
+error smiles
+CCC1CC(CCC2CC2)C1
+CC1C2C1C(C)C13CC14CC3C24
+error smiles
+error smiles
+error smiles
+error smiles
