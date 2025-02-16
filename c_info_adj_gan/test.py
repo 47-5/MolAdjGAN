@@ -5,6 +5,9 @@ import torch
 from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
 from plot_r2 import plot_r2
+from rdkit import RDLogger
+
+RDLogger.DisableLog('rdApp.*')  # 禁止RDKit输出一大堆警报，没什么意义
 
 
 def pre(p=torch.load(os.path.join('trained_model', 'p.pth')),
@@ -66,31 +69,33 @@ def check_valid_uniqueness_novelty_of_g(g=torch.load(os.path.join('trained_model
     return None
 
 
-def check_design_of_g(g=torch.load(os.path.join('trained_model', 'g.pth')), target='density', label_range=None):
+def check_design_of_g(g=torch.load(os.path.join('trained_model', 'g.pth')), target='density', label_range=None,
+                      number=20000):
     assert target in ['density', 'Tm', 'H', 'ISP'], '检查target的标签，只能取density, Tm, H, ISP'
-    mean_list = torch.tensor([0.9997707, 264.84894, 41.690887, 335.81363]).to(g.device)
-    std_list = torch.tensor([0.14093618, 44.425552, 1.1066712, 1.6632848]).to(g.device)
-    z = torch.randn(20000, 100, 1, 1).to(g.device)
+    mean_list = torch.tensor([0.97658324, 256.53836, 42.307995, 337.40717]).to(g.device)
+    std_list = torch.tensor([0.09727769, 17.596157, 0.73100317, 0.7628866]).to(g.device)
+    z = torch.randn(number, 100, 1, 1).to(g.device)
 
     for label_index, label_value in enumerate(label_range):
         # 生成标签
         idx = ['density', 'Tm', 'H', 'ISP'].index(target)
-        label = torch.tensor([[0.9997707, 264.84894, 41.690887, 335.81363]]).to(g.device)
+        label = torch.tensor([[0.97658324, 256.53836, 42.307995, 337.40717]]).to(g.device)
         label[0, idx] = label_value
         label = (label - mean_list) / std_list
         print(label)
         label = label.repeat((z.shape[0], 1)).to(g.device)
 
         # 生成smiles
-        fake_smiles = g.generate_some_smiles(number=20000, zs=z, labels=label, remove_error=True, remove_same=False,
+        fake_smiles = g.generate_some_smiles(number=number, zs=z, labels=label, remove_error=True, remove_same=False,
                                              get_novelty=False,
                                              save='{}_{}.txt'.format(target, label_index))
     return None
 
 
-def generate_x_given_y(g=torch.load(os.path.join('trained_model', 'g.pth')), y=[1.100, 220.0, 43.00, 337.0], number=20000):
-    mean_list = torch.tensor([0.9997707, 264.84894, 41.690887, 335.81363]).to(g.device)
-    std_list = torch.tensor([0.14093618, 44.425552, 1.1066712, 1.6632848]).to(g.device)
+def generate_x_given_y(g=torch.load(os.path.join('trained_model', 'g.pth')), y=[1.100, 220.0, 43.00, 337.0],
+                       number=20000):
+    mean_list = torch.tensor([0.97658324, 256.53836, 42.307995, 337.40717]).to(g.device)
+    std_list = torch.tensor([0.09727769, 17.596157, 0.73100317, 0.7628866]).to(g.device)
     z = torch.randn(number, 100, 1, 1).to(g.device)
     label = torch.tensor([y]).to(g.device)
     label = (label - mean_list) / std_list
@@ -98,7 +103,7 @@ def generate_x_given_y(g=torch.load(os.path.join('trained_model', 'g.pth')), y=[
     label = label.repeat((z.shape[0], 1)).to(g.device)
 
     # 生成smiles
-    fake_smiles = g.generate_some_smiles(number=20000, zs=z, labels=label, remove_error=True, remove_same=False,
+    fake_smiles = g.generate_some_smiles(number=number, zs=z, labels=label, remove_error=True, remove_same=False,
                                          get_novelty=False,
                                          save='design.txt')
     return None
@@ -206,10 +211,10 @@ if __name__ == '__main__':
     # check_valid_uniqueness_novelty_of_g(g=g)
 
     # 检查设计
-    # check_design_of_g(g=g, target='density', label_range=[0.90, 1.00, 1.10])
-    # check_design_of_g(g=g, target='Tm', label_range=[220, 260, 300])
-    # check_design_of_g(g=g, target='H', label_range=[40.0, 41.5, 43.0])
-    # check_design_of_g(g=g, target='ISP', label_range=[335.0, 336.0, 337.0])
+    # check_design_of_g(g=g, target='density', label_range=[0.85, 0.90, 0.95, 1.00, 1.05, 1.10])
+    # check_design_of_g(g=g, target='Tm', label_range=[230, 240, 250, 260, 270, 280])
+    # check_design_of_g(g=g, target='H', label_range=[42.0, 42.25, 42.5, 42.75, 43.0])
+    # check_design_of_g(g=g, target='ISP', label_range=[336.75, 337.0, 337.25, 337.5, 337.75])
 
     # 设计具有理想性质的分子
     # generate_x_given_y(g=g, y=[1.100, 220.0, 43.00, 337.0], number=20000)
@@ -223,13 +228,13 @@ if __name__ == '__main__':
     # # 绘制训练过程中生成器的生成质量
     # plot_generate_quality(dir=os.path.join('fake'), save='valid_percentage_in_training_process.png')
 
-    # # 找经典燃料分子
-    # stop = False
-    # while not stop:
-    #     find = find_classical_fuel_molecules(target_smi='C1CC2C3CCC(C3)C2C1',
-    #                                          target_properties=[1.044, 269.32, 42.088, 337.037],
-    #                                          try_number=30000,
-    #                                          g=g)
-    #     print(find)
-    #     if find:
-    #         stop = True
+    # 找经典燃料分子
+    stop = False
+    while not stop:
+        find = find_classical_fuel_molecules(target_smi='C1CC2C3CCC(C3)C2C1',
+                                             target_properties=[0.98, 230.579, 42.229, 337.601],
+                                             try_number=30000,
+                                             g=g)
+        print(find)
+        if find:
+            stop = True

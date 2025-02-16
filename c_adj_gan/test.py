@@ -5,6 +5,9 @@ import torch
 from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
 from plot_r2 import plot_r2
+from rdkit import RDLogger
+
+RDLogger.DisableLog('rdApp.*')  # 禁止RDKit输出一大堆警报，没什么意义
 
 
 def pre(p=torch.load(os.path.join('trained_model', 'p.pth')),
@@ -66,14 +69,14 @@ def check_valid_uniqueness_novelty_of_g(g=torch.load(os.path.join('trained_model
 
 def check_design_of_g(g=torch.load(os.path.join('trained_model', 'g.pth')), target='density', label_range=None):
     assert target in ['density', 'Tm', 'H', 'ISP'], '检查target的标签，只能取density, Tm, H, ISP'
-    mean_list = torch.tensor([0.9997707, 264.84894, 41.690887, 335.81363]).to(g.device)
-    std_list = torch.tensor([0.14093618, 44.425552, 1.1066712, 1.6632848]).to(g.device)
+    mean_list = torch.tensor([0.97658324, 256.53836, 42.307995, 337.40717]).to(g.device)
+    std_list = torch.tensor([0.09727769, 17.596157, 0.73100317, 0.7628866]).to(g.device)
     z = torch.randn(20000, 100, 1, 1).to(g.device)
 
     for label_index, label_value in enumerate(label_range):
         # 生成标签
         idx = ['density', 'Tm', 'H', 'ISP'].index(target)
-        label = torch.tensor([[0.9997707, 264.84894, 41.690887, 335.81363]]).to(g.device)
+        label = torch.tensor([[0.97658324, 256.53836, 42.307995, 337.40717]]).to(g.device)
         label[0, idx] = label_value
         label = (label - mean_list) / std_list
         print(label)
@@ -82,6 +85,22 @@ def check_design_of_g(g=torch.load(os.path.join('trained_model', 'g.pth')), targ
         # 生成smiles
         fake_smiles = g.generate_some_smiles(number=20000, zs=z, labels=label, remove_error=True, remove_same=False, get_novelty=False,
                                              save='{}_{}.txt'.format(target, label_index))
+    return None
+
+
+def generate_x_given_y(g=torch.load(os.path.join('trained_model', 'g.pth')), y=[1.100, 220.0, 43.00, 337.0], number=20000):
+    mean_list = torch.tensor([0.97658324, 256.53836, 42.307995, 337.40717]).to(g.device)
+    std_list = torch.tensor([0.09727769, 17.596157, 0.73100317, 0.7628866]).to(g.device)
+    z = torch.randn(number, 100, 1, 1).to(g.device)
+    label = torch.tensor([y]).to(g.device)
+    label = (label - mean_list) / std_list
+    print(label)
+    label = label.repeat((z.shape[0], 1)).to(g.device)
+
+    # 生成smiles
+    fake_smiles = g.generate_some_smiles(number=number, zs=z, labels=label, remove_error=True, remove_same=False,
+                                         get_novelty=False,
+                                         save='design.txt')
     return None
 
 
@@ -133,51 +152,51 @@ if __name__ == '__main__':
     #     return_real=True, )
 
     # 画图
-    plot_r2(train_x_y_df_path=os.path.join('data', 'gdb13_g_train_pre.csv'),
-            val_x_y_df_path=os.path.join('data', 'gdb13_g_val_pre.csv'),
-            test_x_y_df_path=os.path.join('data', 'gdb13_g_test_pre.csv'),
-            y_label_name='density/(g/cm3)',
-            y_pre_name='pre_density',
-            tick_number=None, tick_range_offset=None,
-            ticks=[0.5, 0.75, 1.0, 1.25, 1.5],
-            save=True, save_root_path='.'
-            )
-    plot_r2(train_x_y_df_path=os.path.join('data', 'gdb13_g_train_pre.csv'),
-            val_x_y_df_path=os.path.join('data', 'gdb13_g_val_pre.csv'),
-            test_x_y_df_path=os.path.join('data', 'gdb13_g_test_pre.csv'),
-            y_label_name='Tm/K',
-            y_pre_name='pre_Tm',
-            tick_number=None, tick_range_offset=None,
-            ticks=[100, 150, 200, 250, 300],
-            save=True, save_root_path='.'
-            )
-    plot_r2(train_x_y_df_path=os.path.join('data', 'gdb13_g_train_pre.csv'),
-            val_x_y_df_path=os.path.join('data', 'gdb13_g_val_pre.csv'),
-            test_x_y_df_path=os.path.join('data', 'gdb13_g_test_pre.csv'),
-            y_label_name='mass_calorific_value_h/(MJ/kg)',
-            y_pre_name='pre_heat',
-            tick_number=None, tick_range_offset=None,
-            ticks=[40, 42, 44, 46],
-            save=True, save_root_path='.'
-            )
-    plot_r2(train_x_y_df_path=os.path.join('data', 'gdb13_g_train_pre.csv'),
-            val_x_y_df_path=os.path.join('data', 'gdb13_g_val_pre.csv'),
-            test_x_y_df_path=os.path.join('data', 'gdb13_g_test_pre.csv'),
-            y_label_name='ISP',
-            y_pre_name='pre_ISP',
-            tick_number=None, tick_range_offset=None,
-            ticks=[335, 336, 337, 338, 339],
-            save=True, save_root_path='.'
-            )
+    # plot_r2(train_x_y_df_path=os.path.join('data', 'gdb13_g_train_pre.csv'),
+    #         val_x_y_df_path=os.path.join('data', 'gdb13_g_val_pre.csv'),
+    #         test_x_y_df_path=os.path.join('data', 'gdb13_g_test_pre.csv'),
+    #         y_label_name='density/(g/cm3)',
+    #         y_pre_name='pre_density',
+    #         tick_number=None, tick_range_offset=None,
+    #         ticks=[0.5, 0.75, 1.0, 1.25, 1.5],
+    #         save=True, save_root_path='.'
+    #         )
+    # plot_r2(train_x_y_df_path=os.path.join('data', 'gdb13_g_train_pre.csv'),
+    #         val_x_y_df_path=os.path.join('data', 'gdb13_g_val_pre.csv'),
+    #         test_x_y_df_path=os.path.join('data', 'gdb13_g_test_pre.csv'),
+    #         y_label_name='Tm/K',
+    #         y_pre_name='pre_Tm',
+    #         tick_number=None, tick_range_offset=None,
+    #         ticks=[100, 150, 200, 250, 300],
+    #         save=True, save_root_path='.'
+    #         )
+    # plot_r2(train_x_y_df_path=os.path.join('data', 'gdb13_g_train_pre.csv'),
+    #         val_x_y_df_path=os.path.join('data', 'gdb13_g_val_pre.csv'),
+    #         test_x_y_df_path=os.path.join('data', 'gdb13_g_test_pre.csv'),
+    #         y_label_name='mass_calorific_value_h/(MJ/kg)',
+    #         y_pre_name='pre_heat',
+    #         tick_number=None, tick_range_offset=None,
+    #         ticks=[40, 42, 44, 46],
+    #         save=True, save_root_path='.'
+    #         )
+    # plot_r2(train_x_y_df_path=os.path.join('data', 'gdb13_g_train_pre.csv'),
+    #         val_x_y_df_path=os.path.join('data', 'gdb13_g_val_pre.csv'),
+    #         test_x_y_df_path=os.path.join('data', 'gdb13_g_test_pre.csv'),
+    #         y_label_name='ISP',
+    #         y_pre_name='pre_ISP',
+    #         tick_number=None, tick_range_offset=None,
+    #         ticks=[335, 336, 337, 338, 339],
+    #         save=True, save_root_path='.'
+    #         )
 
     # # 检查生成器的valid、uniqueness、novelty
     # check_valid_uniqueness_novelty_of_g(g=g)
 
     # 检查设计
-    # check_design_of_g(g=g, target='density', label_range=[0.90, 1.00, 1.10])
-    # check_design_of_g(g=g, target='Tm', label_range=[220, 260, 300])
-    # check_design_of_g(g=g, target='H', label_range=[40.0, 41.5, 43.0])
-    # check_design_of_g(g=g, target='ISP', label_range=[335.0, 336.0, 337.0])
+    check_design_of_g(g=g, target='density', label_range=[0.85, 0.90, 0.95, 1.00, 1.05, 1.10])
+    check_design_of_g(g=g, target='Tm', label_range=[230, 240, 250, 260, 270, 280])
+    check_design_of_g(g=g, target='H', label_range=[42.0, 42.25, 42.5, 42.75, 43.0])
+    check_design_of_g(g=g, target='ISP', label_range=[336.75, 337.0, 337.25, 337.5, 337.75])
 
     # # 绘制R2
     # plot_r2(x_y_df='with_pre.csv', y_label_name='density/(g/cm3)', y_pre_name='pre_density', save='c_gan_density')
