@@ -1,0 +1,4 @@
+pre_density_train r2: 0.996 
+ mse: 0.0 
+ mae: 0.0045 
+ mape: 0.0045

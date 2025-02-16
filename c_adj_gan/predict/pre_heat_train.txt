@@ -1,0 +1,4 @@
+pre_heat_train r2: 0.998 
+ mse: 0.001 
+ mae: 0.0245 
+ mape: 0.0006

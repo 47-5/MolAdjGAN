@@ -1,0 +1,13 @@
+pre_Tm_val r2: 0.99 
+ mse: 3.0454 
+ mae: 1.178 
+ mape: 0.0047pre_Tm_val r2: 0.99 
+ mse: 3.0454 
+ mae: 1.178 
+ mape: 0.0047pre_Tm_val r2: 0.99 
+ mse: 3.0454 
+ mae: 1.178 
+ mape: 0.0047pre_Tm_val r2: 0.99 
+ mse: 3.0454 
+ mae: 1.178 
+ mape: 0.0047

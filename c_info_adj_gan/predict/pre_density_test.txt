@@ -1,0 +1,7 @@
+pre_density_test r2: 0.997 
+ mse: 0.0 
+ mae: 0.0037 
+ mape: 0.0038pre_density_test r2: 0.997 
+ mse: 0.0 
+ mae: 0.0037 
+ mape: 0.0038

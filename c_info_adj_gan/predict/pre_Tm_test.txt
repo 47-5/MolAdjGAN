@@ -1,0 +1,13 @@
+pre_Tm_test r2: 0.991 
+ mse: 2.8966 
+ mae: 1.1643 
+ mape: 0.0046pre_Tm_test r2: 0.991 
+ mse: 2.8966 
+ mae: 1.1643 
+ mape: 0.0046pre_Tm_test r2: 0.991 
+ mse: 2.8966 
+ mae: 1.1643 
+ mape: 0.0046pre_Tm_test r2: 0.991 
+ mse: 2.8966 
+ mae: 1.1643 
+ mape: 0.0046

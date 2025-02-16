@@ -1,0 +1,13 @@
+pre_Tm_train r2: 0.993 
+ mse: 2.2313 
+ mae: 1.0534 
+ mape: 1477031233329.895pre_Tm_train r2: 0.993 
+ mse: 2.2313 
+ mae: 1.0534 
+ mape: 1477031233329.895pre_Tm_train r2: 0.993 
+ mse: 2.2313 
+ mae: 1.0534 
+ mape: 1477031233329.895pre_Tm_train r2: 0.993 
+ mse: 2.2313 
+ mae: 1.0534 
+ mape: 1477031233329.895

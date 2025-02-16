@@ -4,6 +4,7 @@ import os
 import torch
 from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
+from plot_r2 import plot_r2
 
 
 def pre(p=torch.load(os.path.join('trained_model', 'p.pth')),
@@ -26,34 +27,34 @@ def pre(p=torch.load(os.path.join('trained_model', 'p.pth')),
     return properties
 
 
-def plot_r2(x_y_df, y_label_name, y_pre_name, save=False):
-    plt.rc('font', family='Times New Roman', size=15)
-    if x_y_df.endswith('.xlsx'):
-        df = pd.read_excel(x_y_df)
-    elif x_y_df.endswith('.csv'):
-        df = pd.read_csv(x_y_df)
-    else:
-        print('无法识别的文件类型!')
-        return None
-    y_label = df[y_label_name]
-    y_pre = df[y_pre_name]
-    r2 = round(r2_score(y_label, y_pre), 4)
-    print('r2_score:{}'.format(r2))
-    plt.xlim(min(y_label) - 0.01 * max(y_label), max(y_label) + 0.01 * max(y_label))
-    plt.ylim(min(y_label) - 0.01 * max(y_label), max(y_label) + 0.01 * max(y_label))
-    plt.scatter(y_label, y_pre, c='royalblue', s=15)
-    plt.plot([min(y_label) - 0.01 * max(y_label), max(y_label) + 0.01 * max(y_label)],
-             [min(y_label) - 0.01 * max(y_label), max(y_label) + 0.01 * max(y_label)],
-             c='black')
-    plt.xlabel('label', size=15)
-    plt.ylabel('prediction', size=15)
-    plt.text(0.05, 0.9, 'R2_score:{}'.format(r2),
-             transform=plt.gca().transAxes)  # transform=plt.gca().transAxes是为了要相对于图位置的坐标，而不是数据
-    if save:
-        plt.savefig(save, dpi=500)
-        plt.close()
-        return None
-    plt.show()
+# def plot_r2(x_y_df, y_label_name, y_pre_name, save=False):
+#     plt.rc('font', family='Times New Roman', size=15)
+#     if x_y_df.endswith('.xlsx'):
+#         df = pd.read_excel(x_y_df)
+#     elif x_y_df.endswith('.csv'):
+#         df = pd.read_csv(x_y_df)
+#     else:
+#         print('无法识别的文件类型!')
+#         return None
+#     y_label = df[y_label_name]
+#     y_pre = df[y_pre_name]
+#     r2 = round(r2_score(y_label, y_pre), 4)
+#     print('r2_score:{}'.format(r2))
+#     plt.xlim(min(y_label) - 0.01 * max(y_label), max(y_label) + 0.01 * max(y_label))
+#     plt.ylim(min(y_label) - 0.01 * max(y_label), max(y_label) + 0.01 * max(y_label))
+#     plt.scatter(y_label, y_pre, c='royalblue', s=15)
+#     plt.plot([min(y_label) - 0.01 * max(y_label), max(y_label) + 0.01 * max(y_label)],
+#              [min(y_label) - 0.01 * max(y_label), max(y_label) + 0.01 * max(y_label)],
+#              c='black')
+#     plt.xlabel('label', size=15)
+#     plt.ylabel('prediction', size=15)
+#     plt.text(0.05, 0.9, 'R2_score:{}'.format(r2),
+#              transform=plt.gca().transAxes)  # transform=plt.gca().transAxes是为了要相对于图位置的坐标，而不是数据
+#     if save:
+#         plt.savefig(save, dpi=500)
+#         plt.close()
+#         return None
+#     plt.show()
 
 
 def check_valid_uniqueness_novelty_of_g(g=torch.load(os.path.join('trained_model', 'g.pth')), number=10000,
@@ -146,10 +147,60 @@ if __name__ == '__main__':
     p = torch.load(os.path.join('trained_model', 'p.pth'))
 
     # # 预测燃料性质
-    pre(p=p,
-        df_read_path=os.path.join('data', 'gdb13_g_test.csv'),
-        df_write_path=os.path.join('data', 'gdb13_g_test_pre.csv'),
-        return_real=True,)
+    # pre(p=p,
+    #     df_read_path=os.path.join('data', 'gdb13_g.csv'),
+    #     df_write_path=os.path.join('data', 'gdb13_g_pre.csv'),
+    #     return_real=True, )
+    # pre(p=p,
+    #     df_read_path=os.path.join('data', 'gdb13_g_train.csv'),
+    #     df_write_path=os.path.join('data', 'gdb13_g_train_pre.csv'),
+    #     return_real=True, )
+    # pre(p=p,
+    #     df_read_path=os.path.join('data', 'gdb13_g_val.csv'),
+    #     df_write_path=os.path.join('data', 'gdb13_g_val_pre.csv'),
+    #     return_real=True, )
+    # pre(p=p,
+    #     df_read_path=os.path.join('data', 'gdb13_g_test.csv'),
+    #     df_write_path=os.path.join('data', 'gdb13_g_test_pre.csv'),
+    #     return_real=True,)
+
+    # 画图
+    # plot_r2(train_x_y_df_path=os.path.join('data', 'gdb13_g_train_pre.csv'),
+    #         val_x_y_df_path=os.path.join('data', 'gdb13_g_val_pre.csv'),
+    #         test_x_y_df_path=os.path.join('data', 'gdb13_g_test_pre.csv'),
+    #         y_label_name='density/(g/cm3)',
+    #         y_pre_name='pre_density',
+    #         tick_number=None, tick_range_offset=None,
+    #         ticks=[0.5, 0.75, 1.0, 1.25, 1.5],
+    #         save=True, save_root_path='.'
+    #         )
+    # plot_r2(train_x_y_df_path=os.path.join('data', 'gdb13_g_train_pre.csv'),
+    #         val_x_y_df_path=os.path.join('data', 'gdb13_g_val_pre.csv'),
+    #         test_x_y_df_path=os.path.join('data', 'gdb13_g_test_pre.csv'),
+    #         y_label_name='Tm/K',
+    #         y_pre_name='pre_Tm',
+    #         tick_number=None, tick_range_offset=None,
+    #         ticks=[100, 150, 200, 250, 300],
+    #         save=True, save_root_path='.'
+    #         )
+    # plot_r2(train_x_y_df_path=os.path.join('data', 'gdb13_g_train_pre.csv'),
+    #         val_x_y_df_path=os.path.join('data', 'gdb13_g_val_pre.csv'),
+    #         test_x_y_df_path=os.path.join('data', 'gdb13_g_test_pre.csv'),
+    #         y_label_name='mass_calorific_value_h/(MJ/kg)',
+    #         y_pre_name='pre_heat',
+    #         tick_number=None, tick_range_offset=None,
+    #         ticks=[40, 42, 44, 46],
+    #         save=True, save_root_path='.'
+    #         )
+    # plot_r2(train_x_y_df_path=os.path.join('data', 'gdb13_g_train_pre.csv'),
+    #         val_x_y_df_path=os.path.join('data', 'gdb13_g_val_pre.csv'),
+    #         test_x_y_df_path=os.path.join('data', 'gdb13_g_test_pre.csv'),
+    #         y_label_name='ISP',
+    #         y_pre_name='pre_ISP',
+    #         tick_number=None, tick_range_offset=None,
+    #         ticks=[335, 336, 337, 338, 339],
+    #         save=True, save_root_path='.'
+    #         )
 
     # # 检查生成器的valid、uniqueness、novelty
     # check_valid_uniqueness_novelty_of_g(g=g)
