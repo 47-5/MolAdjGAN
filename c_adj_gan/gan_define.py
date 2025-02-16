@@ -164,8 +164,8 @@ class P(nn.Module):
                 properties *= gap
 
             elif target_transform == '01gaussian':
-                mean_list = torch.tensor([0.9997707, 264.84894, 41.690887, 335.81363]).to(self.device)
-                std_list = torch.tensor([0.14093618, 44.425552, 1.1066712, 1.6632848]).to(self.device)
+                mean_list = torch.tensor([0.97658324, 256.53836, 42.307995, 337.40717]).to(self.device)
+                std_list = torch.tensor([0.09727769, 17.596157, 0.73100317, 0.7628866]).to(self.device)
                 properties *= std_list
                 properties += mean_list
             return properties

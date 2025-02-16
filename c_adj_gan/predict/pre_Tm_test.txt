@@ -1,0 +1,4 @@
+pre_Tm_test r2: 0.99 
+ mse: 2.9663 
+ mae: 1.1786 
+ mape: 0.0047

@@ -1,0 +1,4 @@
+pre_ISP_train r2: 0.998 
+ mse: 0.0013 
+ mae: 0.0275 
+ mape: 0.0001

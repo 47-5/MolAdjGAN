@@ -1,0 +1,4 @@
+pre_ISP_test r2: 0.997 
+ mse: 0.0016 
+ mae: 0.0304 
+ mape: 0.0001
