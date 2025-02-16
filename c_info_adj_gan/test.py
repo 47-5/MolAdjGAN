@@ -6,17 +6,23 @@ from sklearn.metrics import r2_score
 import matplotlib.pyplot as plt
 
 
-def pre(p=torch.load(os.path.join('trained_model', 'p.pth'))):
+def pre(p=torch.load(os.path.join('trained_model', 'p.pth')),
+        df_read_path=os.path.join('data', 'gdb13_g.csv'),
+        df_write_path=os.path.join('data', 'gdb_pre.csv'),
+        return_real=True,):
     """把模型p的预测值输出到csv文件里，便于观察"""
-    df = pd.read_csv(r'data/remove_bad_group_and_bad_tm.csv')
+    df = pd.read_csv(df_read_path)
     x = df.smiles.tolist()
-    properties = p.predict(smiles=x, real=True, target_transform='01gaussian').cpu().detach().numpy()
+    if return_real:
+        properties = p.predict(smiles=x, real=True, target_transform='01gaussian').cpu().detach().numpy()
+    else:
+        properties = p.predict(smiles=x, real=False, target_transform='01gaussian').cpu().detach().numpy()
     print(properties.shape)
     df['pre_density'] = properties[:, 0]
     df['pre_Tm'] = properties[:, 1]
     df['pre_heat'] = properties[:, 2]
     df['pre_ISP'] = properties[:, 3]
-    df.to_csv('with_pre.csv')
+    df.to_csv(df_write_path)
     return properties
 
 
@@ -139,8 +145,11 @@ if __name__ == '__main__':
     g = torch.load(os.path.join('trained_model', 'g.pth'))
     p = torch.load(os.path.join('trained_model', 'p.pth'))
 
-    # #
-    # pre(p=p)
+    # # 预测燃料性质
+    pre(p=p,
+        df_read_path=os.path.join('data', 'gdb13_g_test.csv'),
+        df_write_path=os.path.join('data', 'gdb13_g_test_pre.csv'),
+        return_real=True,)
 
     # # 检查生成器的valid、uniqueness、novelty
     # check_valid_uniqueness_novelty_of_g(g=g)
@@ -152,7 +161,7 @@ if __name__ == '__main__':
     # check_design_of_g(g=g, target='ISP', label_range=[335.0, 336.0, 337.0])
 
     # 设计具有理想性质的分子
-    generate_x_given_y(g=g, y=[1.100, 220.0, 43.00, 337.0], number=20000)
+    # generate_x_given_y(g=g, y=[1.100, 220.0, 43.00, 337.0], number=20000)
 
     # # 绘制R2
     # plot_r2(x_y_df='with_pre.csv', y_label_name='density/(g/cm3)', y_pre_name='pre_density', save='c_gan_density')
