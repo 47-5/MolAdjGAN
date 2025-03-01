@@ -36,8 +36,8 @@ class Generator(nn.Module):
             nn.BatchNorm2d(24 * 1),
             nn.ReLU(inplace=True),
 
-            nn.ConvTranspose2d(in_channels=24 * 1, out_channels=1, kernel_size=(3, 3), stride=(1, 1),
-                               padding=(1, 1), bias=False),
+            nn.ConvTranspose2d(in_channels=24 * 1, out_channels=1, kernel_size=(4, 4), stride=(1, 1),
+                               padding=(0, 0), bias=False),
             nn.Sigmoid()
         )
 
@@ -92,9 +92,9 @@ class Discriminator(nn.Module):
     def __init__(self, device='cuda' if torch.cuda.is_available() else 'cpu'):
         super(Discriminator, self).__init__()
         self.device = device
-        self.dense_emb = nn.Linear(in_features=4, out_features=13 * 13)
+        self.dense_emb = nn.Linear(in_features=4, out_features=16 * 16)
         self.net = nn.Sequential(
-            spectral_norm(nn.Conv2d(in_channels=1, out_channels=24 * 4, kernel_size=(13, 13), stride=(1, 1), padding=(0, 0),
+            spectral_norm(nn.Conv2d(in_channels=1, out_channels=24 * 4, kernel_size=(16, 16), stride=(1, 1), padding=(0, 0),
                           bias=False)),
             nn.BatchNorm2d(24 * 4),
             nn.LeakyReLU(0.2, inplace=True),
@@ -325,15 +325,17 @@ if __name__ == '__main__':
     d = Discriminator()
     p = P()
 
-    # x = torch.randn(32, 1, 13, 13)
-    # label = torch.randn(32, 4)
-    # y = d(x, label)
+    x = torch.randn(32, 1, 16, 16)
+    label = torch.randn(32, 4)
+    y = d(x, label)
+    print(y.shape)
     # d_figure = make_dot(y)
     # d_figure.view()
 
-    # z = torch.randn(32, 100, 1, 1)
-    # label = torch.randn(32, 4)
-    # x_hat = g(z, label)
+    z = torch.randn(32, 100, 1, 1)
+    label = torch.randn(32, 4)
+    x_hat = g(z, label)
+    print(x_hat.shape)
     # g_figure = make_dot(x_hat)
     # g_figure.view()
 

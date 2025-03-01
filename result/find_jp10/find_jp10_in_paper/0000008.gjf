@@ -1,5 +1,5 @@
 %nproc=64
-%mem=512GB
+%mem=256GB
 %chk=0000008.chk
 #p opt freq b3lyp/6-31g* em=gd3bj
 
@@ -42,10 +42,10 @@ H -0.6956 -0.7559 -2.6728
 
 --link1--
 %nproc=64
-%mem=512GB
+%mem=256GB
 %oldchk=0000008.chk
 %chk=0000008_1.chk
-"#p m062x/def2tzvp geom=check em=gd3
+#p m062x/def2tzvp geom=check em=gd3
 
 CCCC1CC2C3CCC2C1C3
 
@@ -54,10 +54,10 @@ CCCC1CC2C3CCC2C1C3
 
 --link1--
 %nproc=64
-%mem=512GB
+%mem=256GB
 %oldchk=0000008.chk
 %chk=0000008_2.chk
-#p m062x/def2tzvp scrf=solvent=water geom=check em=gd3"
+#p m062x/def2tzvp scrf=solvent=water geom=check em=gd3
 
 CCCC1CC2C3CCC2C1C3
 

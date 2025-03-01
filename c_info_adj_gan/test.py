@@ -217,7 +217,7 @@ if __name__ == '__main__':
     # check_design_of_g(g=g, target='ISP', label_range=[336.75, 337.0, 337.25, 337.5, 337.75])
 
     # 设计具有理想性质的分子
-    # generate_x_given_y(g=g, y=[1.100, 220.0, 43.00, 337.0], number=20000)
+    generate_x_given_y(g=g, y=[1.0, 220.0, 43.00, 338.0], number=30000)
 
     # # 绘制R2
     # plot_r2(x_y_df='with_pre.csv', y_label_name='density/(g/cm3)', y_pre_name='pre_density', save='c_gan_density')
@@ -229,12 +229,12 @@ if __name__ == '__main__':
     # plot_generate_quality(dir=os.path.join('fake'), save='valid_percentage_in_training_process.png')
 
     # 找经典燃料分子
-    stop = False
-    while not stop:
-        find = find_classical_fuel_molecules(target_smi='C1CC2C3CCC(C3)C2C1',
-                                             target_properties=[0.98, 230.579, 42.229, 337.601],
-                                             try_number=30000,
-                                             g=g)
-        print(find)
-        if find:
-            stop = True
+    # stop = False
+    # while not stop:
+    #     find = find_classical_fuel_molecules(target_smi='C1CC2C3CCC(C3)C2C1',
+    #                                          target_properties=[0.98, 230.579, 42.229, 337.601],
+    #                                          try_number=30000,
+    #                                          g=g)
+    #     print(find)
+    #     if find:
+    #         stop = True
