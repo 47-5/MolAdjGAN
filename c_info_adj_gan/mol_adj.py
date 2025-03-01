@@ -67,7 +67,7 @@ def nx_to_mol(G, smiles=True):
     return Chem.MolToSmiles(mol) if smiles else mol
 
 
-def CH_smiles_to_adj(mol, padding=16):
+def CH_smiles_to_adj(mol, padding=13):
     """
     获取一个分子的邻接矩阵
     :param mol: Mol对象或SMILES表达式
@@ -179,7 +179,7 @@ if __name__ == '__main__':
     # print(nx_to_mol(g))
 
 
-    adj = CH_smiles_to_adj('CC1C=CCN1CC', padding=16)
+    adj = CH_smiles_to_adj('CC1C=CCN1CC', padding=10)
 
     smi = CH_adj_to_smiles(adj=adj, node_list=[6, 6, 6, 6, 6, 7, 6, 6])
 
