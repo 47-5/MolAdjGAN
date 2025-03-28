@@ -331,9 +331,10 @@ if __name__ == '__main__':
     # d_figure = make_dot(y)
     # d_figure.view()
 
-    # z = torch.randn(32, 100, 1, 1)
-    # label = torch.randn(32, 4)
-    # x_hat = g(z, label)
+    z = torch.randn(32, 100, 1, 1)
+    label = torch.randn(32, 4)
+    x_hat = g(z, label)
+    print(x_hat.shape)
     # g_figure = make_dot(x_hat)
     # g_figure.view()
 
