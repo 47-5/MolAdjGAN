@@ -21,17 +21,17 @@ class Generator(nn.Module):
             nn.BatchNorm2d(24 * 8),
             nn.ReLU(inplace=True),
 
-            nn.ConvTranspose2d(in_channels=24 * 8, out_channels=24 * 4, kernel_size=(4, 4), stride=(1, 1),
+            nn.ConvTranspose2d(in_channels=24 * 8, out_channels=24 * 4, kernel_size=(5, 5), stride=(1, 1),
                                padding=(0, 0), bias=False),
             nn.BatchNorm2d(24 * 4),
             nn.ReLU(inplace=True),
 
-            nn.ConvTranspose2d(in_channels=24 * 4, out_channels=24 * 2, kernel_size=(4, 4), stride=(1, 1),
+            nn.ConvTranspose2d(in_channels=24 * 4, out_channels=24 * 2, kernel_size=(5, 5), stride=(1, 1),
                                padding=(0, 0), bias=False),
             nn.BatchNorm2d(24 * 2),
             nn.ReLU(inplace=True),
 
-            nn.ConvTranspose2d(in_channels=24 * 2, out_channels=24 * 1, kernel_size=(4, 4), stride=(1, 1),
+            nn.ConvTranspose2d(in_channels=24 * 2, out_channels=24 * 1, kernel_size=(5, 5), stride=(1, 1),
                                padding=(0, 0), bias=False),
             nn.BatchNorm2d(24 * 1),
             nn.ReLU(inplace=True),
@@ -92,9 +92,9 @@ class Discriminator(nn.Module):
     def __init__(self, device='cuda' if torch.cuda.is_available() else 'cpu'):
         super(Discriminator, self).__init__()
         self.device = device
-        self.dense_emb = nn.Linear(in_features=4, out_features=17 * 17)
+        self.dense_emb = nn.Linear(in_features=4, out_features=20 * 20)
         self.net = nn.Sequential(
-            spectral_norm(nn.Conv2d(in_channels=1, out_channels=24 * 4, kernel_size=(17, 17), stride=(1, 1), padding=(0, 0),
+            spectral_norm(nn.Conv2d(in_channels=1, out_channels=24 * 4, kernel_size=(20, 20), stride=(1, 1), padding=(0, 0),
                           bias=False)),
             nn.BatchNorm2d(24 * 4),
             nn.LeakyReLU(0.2, inplace=True),
@@ -117,7 +117,7 @@ class P(nn.Module):
         self.device = device
         self.net = nn.Sequential(
             spectral_norm(
-                nn.Conv2d(in_channels=1, out_channels=1024, kernel_size=(17, 17), stride=(1, 1), padding=(0, 0),
+                nn.Conv2d(in_channels=1, out_channels=1024, kernel_size=(20, 20), stride=(1, 1), padding=(0, 0),
                           bias=False)),
             nn.BatchNorm2d(1024),
             nn.LeakyReLU(0.2, inplace=True),
@@ -151,21 +151,21 @@ class P(nn.Module):
     def predict(self, smiles, real=True, target_transform=None):
         assert isinstance(smiles, list), '错误的smiles格式，请确保输入一个装有smiles的列表'
         print('calculating...')
-        adj = torch.tensor(np.array([CH_smiles_to_adj(i, padding=17) for i in smiles]), dtype=torch.float32).to(self.device).reshape(-1, 1, 17, 17)
+        adj = torch.tensor(np.array([CH_smiles_to_adj(i, padding=20) for i in smiles]), dtype=torch.float32).to(self.device).reshape(-1, 1, 20, 20)
         properties = self.net(adj).reshape(-1, 4)
 
         if real:
             assert target_transform is not None, '如果设置real为True,你必须指定如何将预测值映射为真实值(01min_max or 01gaussian)'
             if target_transform == '01min_max':
-                min_list = torch.tensor([1.9726001e-01, 4.4179000e-01, 3.4143700e+01, 3.2215018e+02]).to(self.device)
+                min_list = torch.tensor([1.9726001e-01, 4.4209000e-01, 3.4143700e+01, 3.2215018e+02]).to(self.device)
                 max_list = torch.tensor([1.73219, 375.9341, 47.77336, 342.1071]).to(self.device)
                 properties += min_list
                 gap = max_list - min_list
                 properties *= gap
 
             elif target_transform == '01gaussian':
-                mean_list = torch.tensor([0.97658324, 256.53836, 42.307995, 337.40717]).to(self.device)
-                std_list = torch.tensor([0.09727769, 17.596157, 0.73100317, 0.7628866]).to(self.device)
+                mean_list = torch.tensor([0.9512549, 276.56882, 42.53493, 337.52292]).to(self.device)
+                std_list = torch.tensor([0.07979476, 21.953632, 0.6024123, 0.5954463]).to(self.device)
                 properties *= std_list
                 properties += mean_list
             return properties
@@ -221,7 +221,7 @@ class GAN(nn.Module):
 
                 # 取真实样本和标签
                 real_sample, labels = batch
-                real_sample = real_sample.to(self.device).reshape(-1, 1, 17, 17)
+                real_sample = real_sample.to(self.device).reshape(-1, 1, 20, 20)
                 labels = labels.to(self.device)
 
                 # 生成假样本
@@ -325,7 +325,7 @@ if __name__ == '__main__':
     d = Discriminator()
     p = P()
 
-    x = torch.randn(32, 1, 17, 17)
+    x = torch.randn(32, 1, 20, 20)
     label = torch.randn(32, 4)
     y = d(x, label)
     print(y.shape)
@@ -339,7 +339,7 @@ if __name__ == '__main__':
     # g_figure = make_dot(x_hat)
     # g_figure.view()
 
-    # x = torch.randn(32, 1, 17, 17)
+    # x = torch.randn(32, 1, 20, 20)
     # y_hat = p(x)
     # d_figure = make_dot(y_hat)
     # d_figure.view()
