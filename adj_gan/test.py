@@ -68,7 +68,7 @@ if __name__ == '__main__':
     g = torch.load(os.path.join('trained_model', 'g.pth'))
 
     # # 检查生成器的valid、uniqueness、novelty
-    # check_valid_uniqueness_novelty_of_g(g=g)
+    check_valid_uniqueness_novelty_of_g(g=g)
 
     # # 线性插值
     # z1 = torch.randn(1, 100, 1, 1)

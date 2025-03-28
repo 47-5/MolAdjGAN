@@ -190,13 +190,13 @@ if __name__ == '__main__':
     #         )
 
     # # 检查生成器的valid、uniqueness、novelty
-    # check_valid_uniqueness_novelty_of_g(g=g)
+    check_valid_uniqueness_novelty_of_g(g=g)
 
     # 检查设计
-    check_design_of_g(g=g, target='density', label_range=[0.85, 0.90, 0.95, 1.00, 1.05, 1.10])
-    check_design_of_g(g=g, target='Tm', label_range=[230, 240, 250, 260, 270, 280])
-    check_design_of_g(g=g, target='H', label_range=[42.0, 42.25, 42.5, 42.75, 43.0])
-    check_design_of_g(g=g, target='ISP', label_range=[336.75, 337.0, 337.25, 337.5, 337.75])
+    # check_design_of_g(g=g, target='density', label_range=[0.85, 0.90, 0.95, 1.00, 1.05, 1.10])
+    # check_design_of_g(g=g, target='Tm', label_range=[230, 240, 250, 260, 270, 280])
+    # check_design_of_g(g=g, target='H', label_range=[42.0, 42.25, 42.5, 42.75, 43.0])
+    # check_design_of_g(g=g, target='ISP', label_range=[336.75, 337.0, 337.25, 337.5, 337.75])
 
     # # 绘制R2
     # plot_r2(x_y_df='with_pre.csv', y_label_name='density/(g/cm3)', y_pre_name='pre_density', save='c_gan_density')
